@@ -9,4 +9,6 @@ title: "About Me"
 Here is a super cool photo of me doing one of my favorite things, yawning. 
 
 
-Hey, I like it!
+Hey, I like penguins!
+
+![](pinguim.png)
