@@ -267,45 +267,18 @@ $(document).ready(function () {
 <p>Neste site têm-se dados de vacinação da Covid-19 no estado do Paraná para faixas de <strong>80 anos ou mais</strong>, <strong>70 a 79 anos</strong> e <strong>60 a 69 anos</strong>. Todas essas faixas de idade fazem parte do grupo prioriátio 2, conforme definido pela Secretaria de saúde do estado do Paraná, correspondendo a um total de 1.781.543 pessoas (44% do grupo prioriário - 4.080.010 pessoas).</p>
 <div id="anos-ou-mais" class="section level3">
 <h3>80 anos ou mais</h3>
-<p>Nesta faixa de idade têm-se 250.630 pessoas. Até o momento</p>
-<pre><code>## [1] &quot;Menores de 60 anos&quot; &quot;Entre 60 e 69 anos&quot; &quot;Entre 70 e 79 anos&quot;
-## [4] &quot;Acima de 80 anos&quot;</code></pre>
-<pre echo="FALSE," message="FALSE"><code>
-xyplot(incidencia ~ semana,
-       group = grupo,
-       type = &quot;o&quot;,
-       col = c(gray(0.6),gray(0.4)),
-       lty = 1,
-       pch = 19,
-       cex = 0.9,
-       ylab = NULL,
-       xlab = &quot;semana&quot;,
-       scales = list(y=list(col=0)),
-       data = dados_covid_uniao2,
-       par.settings = list(axis.line = list(col = 0)),
-       panel = function(x, y, ...) {
-               panel.xyplot(x, y, ...)
-               panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = dados_covid_casos2$incidencia, 
-                          col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
-               panel.text(x=dados_covid_obitos2$semana,y=dados_covid_obitos2$incidencia, labels = dados_covid_obitos2$incidencia, 
-                          col = grey(0.2), cex = 0.7, pos = 3, offset = -2)
-               panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$perc, 
-                          col = grey(0.4), cex = 0.7, pos = 3, offset = 2)
-               panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$perc, 
-                          col = grey(0.6), cex = 0.7, pos = 3, offset = 3)
-               panel.text(x=dados_covid_casos2$semana[1],y=dados_covid_casos2$incidencia[1], labels = &quot;Casos&quot;, 
-                          col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
-               panel.text(x=dados_covid_obitos2$semana[1],y=dados_covid_obitos2$incidencia[1], labels = &quot;Óbitos&quot;, 
-                          col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
-               panel.text(x=dados_covid_casos2$semana[1]-0.3,y=dados_covid_casos2$incidencia[1], labels = &quot;1ª dose&quot;, 
-                          col = grey(0.4), cex = 0.7, pos = 3, offset = 2)
-               panel.text(x=dados_covid_casos2$semana[1]-0.3,y=dados_covid_casos2$incidencia[1], labels = &quot;2ª dose&quot;, 
-                          col = grey(0.6), cex = 0.7, pos = 3, offset = 3)
-               panel.xyplot(x=c(dados_covid_casos2$semana[length(dados_covid_casos2$semana)-1],dados_covid_casos2$semana[length(dados_covid_casos2$semana)]),y=c(dados_covid_casos2$incidencia[length(dados_covid_casos2$incidencia)-1],dados_covid_casos2$incidencia[length(dados_covid_casos2$incidencia)]),
-                            type = &quot;o&quot;, col = grey(0.6), lty = 3, lwd = 2)
-               panel.xyplot(x=c(dados_covid_obitos2$semana[length(dados_covid_obitos2$semana)-1],dados_covid_obitos2$semana[length(dados_covid_obitos2$semana)]),y=c(dados_covid_obitos2$incidencia[length(dados_covid_obitos2$incidencia)-1],dados_covid_obitos2$incidencia[length(dados_covid_obitos2$incidencia)]),
-                            type = &quot;o&quot;, col = grey(0.4), lty = 3, lwd = 2)
-         })</code></pre>
+<p>Nesta faixa de idade têm-se 250.630 pessoas. Até a semana epidemiológica 11 , segundo dados obtidos do <a href="https://opendatasus.saude.gov.br/dataset/covid-19-vacinacao">Ministério da Saúde</a>, foram vacinadas 151896 pessoas com a 1ª dose e 30537 pessoas com a 2ª dose no estado do Paraná.</p>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="4500" /></p>
+</div>
+<div id="anos-ou-mais-1" class="section level3">
+<h3>70 anos ou mais</h3>
+<p>Nesta faixa de idade têm-se 250630. Até a semana epidemiológica 11 , segundo dados obtidos do <a href="https://opendatasus.saude.gov.br/dataset/covid-19-vacinacao">Ministério da Saúde</a>, foram vacinadas 71705 pessoas com a 1ª dose e 2856 pessoas com a 2ª dose no estado do Paraná.</p>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="4500" /></p>
+</div>
+<div id="a-69-anos" class="section level3">
+<h3>60 a 69 anos</h3>
+<p>Nesta faixa de idade têm-se 993908. Até a semana epidemiológica 11 , segundo dados obtidos do <a href="https://opendatasus.saude.gov.br/dataset/covid-19-vacinacao">Ministério da Saúde</a>, foram vacinadas 9753 pessoas com a 1ª dose e 5482 pessoas com a 2ª dose no estado do Paraná.</p>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="4500" /></p>
 </div>
 
 
