@@ -42,7 +42,7 @@ setwd("C:/Users/marcelo.maceno/Documents/vacina_covid19_parana")
 #############################################################
 #DADOS DE CASOS DE COVID                                    #
 #############################################################
-dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-04/informe_epidemiologico_18_04_2021_geral.csv",
+dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-04/informe_epidemiologico_25_04_2021_geral.csv",
                      encoding = 'UTF-8')
 
 dados_covid2 <- dados_covid
@@ -83,7 +83,7 @@ dados_covid_obitos <- dados_covid3 %>%
 ##############################################################
 #DADOS DA VACINA                                             #
 ##############################################################
-dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-04-18/uf%3DPR/part-00000-d1899826-c634-41aa-9a8c-bc16d2205a25.c000.csv",
+dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-04-25/uf%3DPR/part-00000-9386ceed-aaa3-4a8f-96e5-349099e1d6db.c000.csv",
                       encoding = 'UTF-8')
 dados_vacina$ind <- 1
 dados_vacina$vacina_descricao_dose <- as.factor(dados_vacina$vacina_descricao_dose)
