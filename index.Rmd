@@ -42,7 +42,7 @@ setwd("C:/Users/marcelo.maceno/Documents/vacina_covid19_parana")
 #############################################################
 #DADOS DE CASOS DE COVID                                    #
 #############################################################
-dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-04/informe_epidemiologico_25_04_2021_geral.csv",
+dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_02_05_2021_geral.csv",
                      encoding = 'UTF-8')
 
 dados_covid2 <- dados_covid
@@ -83,7 +83,7 @@ dados_covid_obitos <- dados_covid3 %>%
 ##############################################################
 #DADOS DA VACINA                                             #
 ##############################################################
-dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-04-25/uf%3DPR/part-00000-9386ceed-aaa3-4a8f-96e5-349099e1d6db.c000.csv",
+dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-02/uf%3DPR/part-00000-2a9d0e2a-e780-4468-b4f8-7e0a1a01b3de.c000.csv",
                       encoding = 'UTF-8')
 dados_vacina$ind <- 1
 dados_vacina$vacina_descricao_dose <- as.factor(dados_vacina$vacina_descricao_dose)
@@ -268,7 +268,7 @@ obj2 <- xyplot(perc ~ semana,
                cex = 0.6,
                lwd = 2,
                ylab = NULL,
-               ylim = c(-0.05,1),
+               ylim = c(-0.05,1.1),
                scales = list(x=list(at=dados_covid_casos3$semana, label = dados_covid_casos3$semana),y=list(col=0)),
                data = dados_vacina_agrup3,
                par.settings=list(axis.line=list(col=gray(0.6))),
