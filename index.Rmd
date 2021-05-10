@@ -23,10 +23,8 @@ ponto <- function(x) format(x, big.mark = ".")
    font-family: arial;
 </style>
 
-# Índice
-Neste site têm-se dados de vacinação da Covid-19 no estado do Paraná para faixas de **80 anos ou mais**, **70 a 79 anos**, **60 a 69 anos** e **abaixo de 60 anos**. As três primeiras faixas de idade fazem parte do grupo prioriátio 2, conforme definido pela Secretaria de saúde do estado do Paraná, correspondendo a um total de 1.781.543 pessoas (44% do grupo prioriário - 4.080.010 pessoas). Este site será atualizado toda segunda-feira.
-
-Última atualização : `r format(Sys.Date(), '%d de %B de %Y')`
+# Index
+Neste site têm-se dados de vacinação da Covid-19 no estado do Paraná para faixas de **80 anos ou mais**, **70 a 79 anos**, **60 a 69 anos** e **abaixo de 60 anos**. As três primeiras faixas de idade fazem parte do grupo prioriátio 2, conforme definido pela Secretaria de saúde do estado do Paraná, correspondendo a um total de 1.781.543 pessoas (44% do grupo prioriário - 4.080.010 pessoas).
 
 ```{r, echo = FALSE, message=FALSE}
 require(data.table)
@@ -37,12 +35,12 @@ require(lubridate)
 require(latticeExtra)
 options(scipen = 999)
 
-setwd("C:/Users/marcelo.maceno/Documents/vacina_covid19_parana")
+setwd("C:/Users/marcelo.maceno/Documents/projeto_corona")
 
 #############################################################
 #DADOS DE CASOS DE COVID                                    #
 #############################################################
-dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_02_05_2021_geral.csv",
+dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_09_05_2021_geral.csv",
                      encoding = 'UTF-8')
 
 dados_covid2 <- dados_covid
@@ -83,7 +81,7 @@ dados_covid_obitos <- dados_covid3 %>%
 ##############################################################
 #DADOS DA VACINA                                             #
 ##############################################################
-dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-02/uf%3DPR/part-00000-2a9d0e2a-e780-4468-b4f8-7e0a1a01b3de.c000.csv",
+dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-06/uf%3DPR/part-00000-ab6157b3-a375-42fc-a326-12ce17818c90.c000.csv",
                       encoding = 'UTF-8')
 dados_vacina$ind <- 1
 dados_vacina$vacina_descricao_dose <- as.factor(dados_vacina$vacina_descricao_dose)
@@ -162,9 +160,9 @@ obj1 <- xyplot(incidencia ~ semana,
        panel = function(x, y, ...) {
          panel.xyplot(x, y, ...)
          panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = dados_covid_casos2$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_obitos2$semana,y=dados_covid_obitos2$incidencia, labels = dados_covid_obitos2$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_casos2$semana[1],y=dados_covid_casos2$incidencia[1], labels = "Casos", 
                     col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
          panel.text(x=dados_covid_obitos2$semana[1],y=dados_covid_obitos2$incidencia[1], labels = "Óbitos", 
@@ -179,8 +177,7 @@ obj2 <- xyplot(perc ~ semana,
                col = c("steel blue","blue"),
                lty = 3,
                pch = 19,
-               cex = 0.6,
-               lwd = 2,
+               cex = 0.9,
                ylab = NULL,
                ylim = c(-0.05,1),
                scales = list(y=list(col=0)),
@@ -189,9 +186,9 @@ obj2 <- xyplot(perc ~ semana,
                panel = function(x, y, ...) {
                  panel.xyplot(x, y, ...)
                  panel.text(x=subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana,y=subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$perc, labels = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$perc2, 
-                            col = "steel blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "steel blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$semana,y=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$perc, labels = subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$perc2, 
-                            col = "blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana[1],y=subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$perc[1], labels = "1ª dose", 
                             col = "steel blue", cex = 0.7, pos = 2, offset = 1)
                  panel.text(x=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$semana[1],y=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$perc[1], labels = "2ª dose", 
@@ -224,7 +221,7 @@ num_vacin_prim_dose <- max(subset(dados_vacina_agrup3, vacina_descricao_dose == 
 num_vacin_seg_dose <- max(subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$soma)
 ```
 
-# 70 anos ou mais
+# 70 a 79 anos
 ### Nesta faixa de idade têm-se `r ponto(total70)` pessoas. Até a semana epidemiológica `r max(dados_vacina_agrup2$semana)`, segundo dados obtidos do [Ministério da Saúde](https://opendatasus.saude.gov.br/dataset/covid-19-vacinacao), foram vacinadas `r ponto(num_vacin_prim_dose)` pessoas com a 1ª dose e `r ponto(num_vacin_seg_dose)` pessoas com a 2ª dose no estado do Paraná.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -242,15 +239,15 @@ obj1 <- xyplot(incidencia ~ semana,
        xlab = "Semana epidemiológica",
        xlim = c(0.2,max(dados_vacina_agrup3$semana)+0.4),
        ylim = c(0,max(dados_covid_uniao3$incidencia)+200),
-       scales = list(x=list(at=dados_covid_casos3$semana, label = dados_covid_casos3$semana),y=list(col=0)),
+       scales = list(y=list(col=0)),
        data = dados_covid_uniao3,
        par.settings=list(axis.line=list(col=gray(0.6))),
        panel = function(x, y, ...) {
          panel.xyplot(x, y, ...)
          panel.text(x=dados_covid_casos3$semana,y=dados_covid_casos3$incidencia, labels = dados_covid_casos3$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_obitos3$semana,y=dados_covid_obitos3$incidencia, labels = dados_covid_obitos3$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_casos3$semana[1],y=dados_covid_casos3$incidencia[1], labels = "Casos", 
                     col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
          panel.text(x=dados_covid_obitos3$semana[1],y=dados_covid_obitos3$incidencia[1], labels = "Óbitos", 
@@ -265,8 +262,7 @@ obj2 <- xyplot(perc ~ semana,
                col = c("steel blue","blue"),
                lty = 3,
                pch = 19,
-               cex = 0.6,
-               lwd = 2,
+               cex = 0.9,
                ylab = NULL,
                ylim = c(-0.05,1.1),
                scales = list(x=list(at=dados_covid_casos3$semana, label = dados_covid_casos3$semana),y=list(col=0)),
@@ -275,9 +271,9 @@ obj2 <- xyplot(perc ~ semana,
                panel = function(x, y, ...) {
                  panel.xyplot(x, y, ...)
                  panel.text(x=subset(dados_vacina_agrup3, vacina_descricao_dose == prim_dose)$semana,y=subset(dados_vacina_agrup3, vacina_descricao_dose == prim_dose)$perc, labels = subset(dados_vacina_agrup3, vacina_descricao_dose == prim_dose)$perc2, 
-                            col = "steel blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "steel blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$semana,y=subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$perc, labels = subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$perc2, 
-                            col = "blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup3, vacina_descricao_dose == prim_dose)$semana[1],y=subset(dados_vacina_agrup3, vacina_descricao_dose == prim_dose)$perc[1], labels = "1ª dose", 
                             col = "steel blue", cex = 0.7, pos = 2, offset = 1)
                  panel.text(x=subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$semana[1],y=subset(dados_vacina_agrup3, vacina_descricao_dose == seg_dose)$perc[1], labels = "2ª dose", 
@@ -334,9 +330,9 @@ obj1 <- xyplot(incidencia ~ semana,
        panel = function(x, y, ...) {
          panel.xyplot(x, y, ...)
          panel.text(x=dados_covid_casos4$semana,y=dados_covid_casos4$incidencia, labels = dados_covid_casos4$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_obitos4$semana,y=dados_covid_obitos4$incidencia, labels = dados_covid_obitos4$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_casos4$semana[1],y=dados_covid_casos4$incidencia[1], labels = "Casos", 
                     col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
          panel.text(x=dados_covid_obitos4$semana[1],y=dados_covid_obitos4$incidencia[1], labels = "Óbitos", 
@@ -351,8 +347,7 @@ obj2 <- xyplot(perc ~ semana,
                col = c("steel blue","blue"),
                lty = 3,
                pch = 19,
-               cex = 0.6,
-               lwd = 2,
+               cex = 0.9,
                ylab = NULL,
                ylim = c(-0.05,1),
                scales = list(y=list(col=0)),
@@ -361,9 +356,9 @@ obj2 <- xyplot(perc ~ semana,
                panel = function(x, y, ...) {
                  panel.xyplot(x, y, ...)
                  panel.text(x=subset(dados_vacina_agrup4, vacina_descricao_dose == prim_dose)$semana,y=subset(dados_vacina_agrup4, vacina_descricao_dose == prim_dose)$perc, labels = subset(dados_vacina_agrup4, vacina_descricao_dose == prim_dose)$perc2, 
-                            col = "steel blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "steel blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup4, vacina_descricao_dose == seg_dose)$semana,y=subset(dados_vacina_agrup4, vacina_descricao_dose == seg_dose)$perc, labels = subset(dados_vacina_agrup4, vacina_descricao_dose == seg_dose)$perc2, 
-                            col = "blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup4, vacina_descricao_dose == prim_dose)$semana[1],y=subset(dados_vacina_agrup4, vacina_descricao_dose == prim_dose)$perc[1], labels = "1ª dose", 
                             col = "steel blue", cex = 0.7, pos = 2, offset = 1)
                  panel.text(x=subset(dados_vacina_agrup4, vacina_descricao_dose == seg_dose)$semana[1],y=subset(dados_vacina_agrup4, vacina_descricao_dose == seg_dose)$perc[1], labels = "2ª dose", 
@@ -419,9 +414,9 @@ obj1 <- xyplot(incidencia ~ semana,
        panel = function(x, y, ...) {
          panel.xyplot(x, y, ...)
          panel.text(x=dados_covid_casos5$semana,y=dados_covid_casos5$incidencia, labels = dados_covid_casos5$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_obitos5$semana,y=dados_covid_obitos5$incidencia, labels = dados_covid_obitos5$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 0.6)
+                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
          panel.text(x=dados_covid_casos5$semana[1],y=dados_covid_casos5$incidencia[1], labels = "Casos", 
                     col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
          panel.text(x=dados_covid_obitos5$semana[1],y=dados_covid_obitos5$incidencia[1], labels = "Óbitos", 
@@ -436,8 +431,7 @@ obj2 <- xyplot(perc ~ semana,
                col = c("steel blue","blue"),
                lty = 3,
                pch = 19,
-               cex = 0.6,
-               lwd = 2,
+               cex = 0.9,
                ylab = NULL,
                ylim = c(-0.05,1),
                scales = list(y=list(col=0)),
@@ -446,9 +440,9 @@ obj2 <- xyplot(perc ~ semana,
                panel = function(x, y, ...) {
                  panel.xyplot(x, y, ...)
                  panel.text(x=subset(dados_vacina_agrup5, vacina_descricao_dose == prim_dose)$semana,y=subset(dados_vacina_agrup5, vacina_descricao_dose == prim_dose)$perc, labels = subset(dados_vacina_agrup5, vacina_descricao_dose == prim_dose)$perc2, 
-                            col = "steel blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "steel blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup5, vacina_descricao_dose == seg_dose)$semana,y=subset(dados_vacina_agrup5, vacina_descricao_dose == seg_dose)$perc, labels = subset(dados_vacina_agrup5, vacina_descricao_dose == seg_dose)$perc2, 
-                            col = "blue", cex = 0.6, pos = 3, offset = 0.6)
+                            col = "blue", cex = 0.7, pos = 3, offset = 0.6)
                  panel.text(x=subset(dados_vacina_agrup5, vacina_descricao_dose == prim_dose)$semana[1],y=subset(dados_vacina_agrup5, vacina_descricao_dose == prim_dose)$perc[1], labels = "1ª dose", 
                             col = "steel blue", cex = 0.7, pos = 2, offset = 1)
                  panel.text(x=subset(dados_vacina_agrup5, vacina_descricao_dose == seg_dose)$semana[1],y=subset(dados_vacina_agrup5, vacina_descricao_dose == seg_dose)$perc[1], labels = "2ª dose", 
@@ -469,7 +463,7 @@ invisible(dev.off())
 Column {data-width=200}
 -------------------------------------
 
-### Variação dos óbitos em relação à semana anterior
+### Variação de óbitos em relação à semana anterior
 
 ```{r, echo=FALSE}
 dados_obitos_perc2 <- label_percent(accuracy = 1)((dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)]-dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)-1])/dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)-1])
@@ -589,7 +583,3 @@ invisible(dev.off())
 ### Percentual de óbitos por semana epidemiológica
 
 ![](grafico_obitos_faixasidade.png){width=100%}
-
-# Sobre
-
-### Site criado por Marcelo Maceno. Formado em Estatística pela Universidade Federal do Paraná (2019). Este site foi criado com o intuito de acompanhar os dados da evolução do covid no estado do Paraná em 2021, após o início da vacinação, para as diferentes faixas de idade.
