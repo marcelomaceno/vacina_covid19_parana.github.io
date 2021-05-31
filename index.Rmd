@@ -327,7 +327,7 @@ obj1 <- xyplot(incidencia ~ semana,
        ylab = NULL,
        xlab = "Semana epidemiológica",
        xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
-       ylim = c(0,max(dados_covid_uniao4$incidencia)+700),
+       ylim = c(0,max(dados_covid_uniao4$incidencia)+1200),
        scales = list(x=list(at=(max(dados_covid_uniao$semana)-14):max(dados_covid_uniao$semana), label = dados_covid_casos2$semana),y=list(col=0)),
        data = dados_covid_uniao4,
        par.settings=list(axis.line=list(col=gray(0.6))),
@@ -504,6 +504,8 @@ dados_covid_casos6 <- dados_covid4 %>%
   mutate(perc_acum = (perc_acum1+perc_acum2)/2) %>%
   filter(faixaidade != "NA") %>%
   mutate(grupo = "casos")
+
+dados_covid_casos6 <- subset(dados_covid_casos6, semana > max(dados_covid_casos6$semana)-15)
 dados_covid_casos6$semana <- as.factor(dados_covid_casos6$semana)
 dados_covid_casos6 <- droplevels(dados_covid_casos6)
 
@@ -519,6 +521,8 @@ dados_covid_obitos6 <- dados_covid5 %>%
   mutate(perc_acum = (perc_acum1+perc_acum2)/2) %>%
   filter(faixaidade != "NA") %>%
   mutate(grupo = "óbitos")
+
+dados_covid_obitos6 <- subset(dados_covid_obitos6, semana > max(dados_covid_obitos6$semana)-15)
 dados_covid_obitos6$semana <- as.factor(dados_covid_obitos6$semana)
 dados_covid_obitos6 <- droplevels(dados_covid_obitos6)
 
