@@ -40,7 +40,7 @@ setwd("C:/Users/marcelo.maceno/Documents/projeto_corona")
 #############################################################
 #DADOS DE CASOS DE COVID                                    #
 #############################################################
-dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_16_05_2021_geral.csv",
+dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_30_05_2021_geral.csv",
                      encoding = 'UTF-8', select = c("IDADE_ORIGINAL","DATA_DIAGNOSTICO","DATA_OBITO"))
 
 dados_covid2 <- dados_covid
@@ -61,6 +61,8 @@ dados_covid_casos <- dados_covid3 %>%
   mutate(acum = cumsum(incidencia)) %>%
   mutate(grupo = "casos")
 
+dados_covid_casos <- subset(dados_covid_casos, semana > max(dados_covid_casos$semana)-15)
+
 #Número de óbitos por covid separado por semana
 dados_covid2 <- dados_covid
 dados_covid2$DATA_OBITO <- as.Date(dados_covid2$DATA_OBITO, format="%d/%m/%Y")
@@ -78,10 +80,12 @@ dados_covid_obitos <- dados_covid3 %>%
   mutate(acum = cumsum(incidencia)) %>%
   mutate(grupo = "óbitos")
 
+dados_covid_obitos <- subset(dados_covid_obitos, semana > max(dados_covid_obitos$semana)-15)
+
 ##############################################################
 #DADOS DA VACINA                                             #
 ##############################################################
-dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-16/uf%3DPR/part-00000-f3588c19-4ab8-42b1-86e7-7ff9ab4ff9b2.c000.csv",
+dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-30/uf%3DPR/part-00000-c6f35be5-568b-4cdc-8a34-55616fec6ab1.c000.csv",
                       encoding = 'UTF-8', select = c("paciente_idade","vacina_dataaplicacao","vacina_descricao_dose"))
 dados_vacina$ind <- 1
 dados_vacina$vacina_descricao_dose <- as.factor(dados_vacina$vacina_descricao_dose)
@@ -113,11 +117,13 @@ dados_vacina_agrup <- dados_vacina %>%
   mutate(perc = soma/grupos) %>%
   mutate(perc2 = label_percent(accuracy = 1)(perc))
 
+dados_vacina_agrup <- subset(dados_vacina_agrup, semana > max(dados_vacina_agrup$semana)-15)
+
 #############################################################
 #Gráficos                                                   #
 #############################################################
 dados_covid_uniao <- rbind(dados_covid_casos,dados_covid_obitos)
-dados_covid_uniao$semana <- as.factor(dados_covid_uniao$semana)
+dados_covid_uniao <- subset(dados_covid_uniao, semana > max(dados_covid_uniao$semana)-15)
 
 #############################################################
 #80 anos ou mais                                            #
@@ -126,10 +132,6 @@ dados_covid_casos2 <- subset(dados_covid_casos, faixaidade == "Acima de 80 anos"
 dados_covid_obitos2 <- subset(dados_covid_obitos, faixaidade == "Acima de 80 anos")
 dados_vacina_agrup2 <- subset(dados_vacina_agrup, faixaidade == "Acima de 80 anos")
 dados_covid_uniao2 <- subset(dados_covid_uniao, faixaidade == "Acima de 80 anos")
-
-dados_vacina_agrup2 <- rbind(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose),
-                             subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)[4:nrow(subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)),])
-                             
 
 num_vacin_prim_dose <- max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$soma)
 num_vacin_seg_dose <- max(subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$soma)
@@ -143,34 +145,34 @@ num_vacin_seg_dose <- max(subset(dados_vacina_agrup2, vacina_descricao_dose == s
 png(file="grafico_80anosoumais.png",
     width=10, height=5, units="in", res=500)
 obj1 <- xyplot(incidencia ~ semana,
-       group = grupo,
-       type = "o",
-       col = c(gray(0.6),gray(0.4)),
-       lty = 1,
-       pch = 19,
-       cex = 0.9,
-       lwd = 2,
-       ylab = NULL,
-       xlab = "Semana epidemiológica",
-       xlim = c(0.2,max(dados_vacina_agrup2$semana)+0.4),
-       ylim = c(0,max(dados_covid_uniao2$incidencia)+100),
-       scales = list(x=list(at=dados_covid_casos2$semana, label = dados_covid_casos2$semana),y=list(col=0)),
-       data = dados_covid_uniao2,
-       par.settings=list(axis.line=list(col=gray(0.6))),
-       panel = function(x, y, ...) {
-         panel.xyplot(x, y, ...)
-         panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = dados_covid_casos2$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
-         panel.text(x=dados_covid_obitos2$semana,y=dados_covid_obitos2$incidencia, labels = dados_covid_obitos2$incidencia, 
-                    col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
-         panel.text(x=dados_covid_casos2$semana[1],y=dados_covid_casos2$incidencia[1], labels = "Casos", 
-                    col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
-         panel.text(x=dados_covid_obitos2$semana[1],y=dados_covid_obitos2$incidencia[1], labels = "Óbitos", 
-                    col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
+               group = grupo,
+               type = "o",
+               col = c(gray(0.6),gray(0.4)),
+               lty = 1,
+               pch = 19,
+               cex = 0.9,
+               lwd = 2,
+               ylab = NULL,
+               xlab = "Semana epidemiológica",
+               xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
+               ylim = c(0,max(dados_covid_uniao2$incidencia)+100),
+               scales = list(x=list(at=(max(dados_covid_uniao$semana)-14):max(dados_covid_uniao$semana), label = dados_covid_casos2$semana),y=list(col=0)),
+               data = dados_covid_uniao2,
+               par.settings=list(axis.line=list(col=gray(0.6))),
+               panel = function(x, y, ...) {
+                 panel.xyplot(x, y, ...)
+                 panel.text(x=dados_covid_casos2$semana,y=dados_covid_casos2$incidencia, labels = dados_covid_casos2$incidencia, 
+                            col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
+                 panel.text(x=dados_covid_obitos2$semana,y=dados_covid_obitos2$incidencia, labels = dados_covid_obitos2$incidencia, 
+                            col = grey(0.2), cex = 0.7, pos = 3, offset = 1)
+                 panel.text(x=dados_covid_casos2$semana[1],y=dados_covid_casos2$incidencia[1], labels = "Casos", 
+                            col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
+                 panel.text(x=dados_covid_obitos2$semana[1],y=dados_covid_obitos2$incidencia[1], labels = "Óbitos", 
+                            col = grey(0.2), cex = 0.7, pos = 4, offset = -3.5)
+                 
+               })
 
-       })
 
-  
 obj2 <- xyplot(perc ~ semana,
                group = vacina_descricao_dose,
                type = "o",
@@ -179,8 +181,9 @@ obj2 <- xyplot(perc ~ semana,
                pch = 19,
                cex = 0.9,
                ylab = NULL,
-               ylim = c(-0.05,1),
-               scales = list(y=list(col=0)),
+               xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
+               ylim = c(-0.05,1.05),
+               scales = list(x=list(at=(max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana)-14):max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana), label = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana),y=list(col=0)),
                data = dados_vacina_agrup2,
                par.settings=list(axis.line=list(col=gray(0.6))),
                panel = function(x, y, ...) {
@@ -193,12 +196,12 @@ obj2 <- xyplot(perc ~ semana,
                             col = "steel blue", cex = 0.7, pos = 2, offset = 1)
                  panel.text(x=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$semana[1],y=subset(dados_vacina_agrup2, vacina_descricao_dose == seg_dose)$perc[1], labels = "2ª dose", 
                             col = "blue", cex = 0.7, pos = 2, offset = 1)
-                 })
+               })
 
 doubleYScale(obj1,obj2)
 
 update(trellis.last.object(),
-par.settings = simpleTheme(col = c(gray(1), gray(1))))
+       par.settings = simpleTheme(col = c(gray(1), gray(1))))
 invisible(dev.off())
 ```
 
@@ -237,9 +240,9 @@ obj1 <- xyplot(incidencia ~ semana,
        lwd = 2,
        ylab = NULL,
        xlab = "Semana epidemiológica",
-       xlim = c(0.2,max(dados_vacina_agrup3$semana)+0.4),
+       xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
        ylim = c(0,max(dados_covid_uniao3$incidencia)+200),
-       scales = list(y=list(col=0)),
+       scales = list(x=list(at=(max(dados_covid_uniao$semana)-14):max(dados_covid_uniao$semana), label = dados_covid_casos2$semana),y=list(col=0)),
        data = dados_covid_uniao3,
        par.settings=list(axis.line=list(col=gray(0.6))),
        panel = function(x, y, ...) {
@@ -264,8 +267,9 @@ obj2 <- xyplot(perc ~ semana,
                pch = 19,
                cex = 0.9,
                ylab = NULL,
+               xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
                ylim = c(-0.05,1.1),
-               scales = list(x=list(at=dados_covid_casos3$semana, label = dados_covid_casos3$semana),y=list(col=0)),
+               scales = list(x=list(at=(max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana)-14):max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana), label = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana),y=list(col=0)),
                data = dados_vacina_agrup3,
                par.settings=list(axis.line=list(col=gray(0.6))),
                panel = function(x, y, ...) {
@@ -322,9 +326,9 @@ obj1 <- xyplot(incidencia ~ semana,
        lwd = 2,
        ylab = NULL,
        xlab = "Semana epidemiológica",
-       xlim = c(0.2,max(dados_vacina_agrup4$semana)+0.4),
-       ylim = c(0,max(dados_covid_uniao4$incidencia)+500),
-       scales = list(x=list(at=dados_covid_casos4$semana, label = dados_covid_casos4$semana),y=list(col=0)),
+       xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
+       ylim = c(0,max(dados_covid_uniao4$incidencia)+700),
+       scales = list(x=list(at=(max(dados_covid_uniao$semana)-14):max(dados_covid_uniao$semana), label = dados_covid_casos2$semana),y=list(col=0)),
        data = dados_covid_uniao4,
        par.settings=list(axis.line=list(col=gray(0.6))),
        panel = function(x, y, ...) {
@@ -349,8 +353,9 @@ obj2 <- xyplot(perc ~ semana,
                pch = 19,
                cex = 0.9,
                ylab = NULL,
+               xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
                ylim = c(-0.05,1),
-               scales = list(y=list(col=0)),
+               scales = list(x=list(at=(max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana)-14):max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana), label = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana),y=list(col=0)),
                data = dados_vacina_agrup4,
                par.settings=list(axis.line=list(col=gray(0.6))),
                panel = function(x, y, ...) {
@@ -406,9 +411,9 @@ obj1 <- xyplot(incidencia ~ semana,
        lwd = 2,
        ylab = NULL,
        xlab = "Semana epidemiológica",
-       xlim = c(0.2,max(dados_vacina_agrup5$semana)+0.4),
+       xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
        ylim = c(-1000,max(dados_covid_uniao5$incidencia)+9000),
-       scales = list(x=list(at=dados_covid_casos5$semana, label = dados_covid_casos5$semana),y=list(col=0)),
+       scales = list(x=list(at=(max(dados_covid_uniao$semana)-14):max(dados_covid_uniao$semana), label = dados_covid_casos2$semana),y=list(col=0)),
        data = dados_covid_uniao5,
        par.settings=list(axis.line=list(col=gray(0.6))),
        panel = function(x, y, ...) {
@@ -433,8 +438,9 @@ obj2 <- xyplot(perc ~ semana,
                pch = 19,
                cex = 0.9,
                ylab = NULL,
+               xlim = c(max(dados_covid_uniao$semana)-15.2,max(dados_covid_uniao$semana)+0.4),
                ylim = c(-0.05,1),
-               scales = list(y=list(col=0)),
+               scales = list(x=list(at=(max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana)-14):max(subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana), label = subset(dados_vacina_agrup2, vacina_descricao_dose == prim_dose)$semana),y=list(col=0)),
                data = dados_vacina_agrup5,
                par.settings=list(axis.line=list(col=gray(0.6))),
                panel = function(x, y, ...) {
@@ -466,10 +472,10 @@ Column {data-width=200}
 ### Variação de óbitos em relação à semana anterior
 
 ```{r, echo=FALSE}
-dados_obitos_perc2 <- label_percent(accuracy = 1)((dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)]-dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)-1])/dados_covid_obitos2$incidencia[max(dados_covid_obitos2$semana)-1])
-dados_obitos_perc3 <- label_percent(accuracy = 1)((dados_covid_obitos3$incidencia[max(dados_covid_obitos3$semana)]-dados_covid_obitos3$incidencia[max(dados_covid_obitos3$semana)-1])/dados_covid_obitos3$incidencia[max(dados_covid_obitos3$semana)-1])
-dados_obitos_perc4 <- label_percent(accuracy = 1)((dados_covid_obitos4$incidencia[max(dados_covid_obitos4$semana)]-dados_covid_obitos4$incidencia[max(dados_covid_obitos4$semana)-1])/dados_covid_obitos4$incidencia[max(dados_covid_obitos4$semana)-1])
-dados_obitos_perc5 <- label_percent(accuracy = 1)((dados_covid_obitos5$incidencia[max(dados_covid_obitos5$semana)]-dados_covid_obitos5$incidencia[max(dados_covid_obitos5$semana)-1])/dados_covid_obitos5$incidencia[max(dados_covid_obitos5$semana)-1])
+dados_obitos_perc2 <- label_percent(accuracy = 1)((dados_covid_obitos2$incidencia[15]-dados_covid_obitos2$incidencia[14])/dados_covid_obitos2$incidencia[14])
+dados_obitos_perc3 <- label_percent(accuracy = 1)((dados_covid_obitos3$incidencia[15]-dados_covid_obitos3$incidencia[14])/dados_covid_obitos3$incidencia[14])
+dados_obitos_perc4 <- label_percent(accuracy = 1)((dados_covid_obitos4$incidencia[15]-dados_covid_obitos4$incidencia[14])/dados_covid_obitos4$incidencia[14])
+dados_obitos_perc5 <- label_percent(accuracy = 1)((dados_covid_obitos5$incidencia[15]-dados_covid_obitos5$incidencia[14])/dados_covid_obitos5$incidencia[14])
 
 dados_obitos_var <- data.frame(faixasdeidade = c("Acima de 80 anos","Entre 70 e 79 anos","Entre 60 e 69 anos","Menores de 60 anos"),
                                variação = c(dados_obitos_perc2,dados_obitos_perc3,dados_obitos_perc4,dados_obitos_perc5))
