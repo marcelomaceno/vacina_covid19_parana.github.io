@@ -35,12 +35,12 @@ require(lubridate)
 require(latticeExtra)
 options(scipen = 999)
 
-setwd("C:/Users/marcelo.maceno/Documents/projeto_corona")
+setwd("C:/Users/marcelo.maceno/Documents/projeto vacina covid19 parana")
 
 #############################################################
 #DADOS DE CASOS DE COVID                                    #
 #############################################################
-dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-05/informe_epidemiologico_30_05_2021_geral.csv",
+dados_covid <- fread("https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-06/informe_epidemiologico_13_06_2021_geral.csv",
                      encoding = 'UTF-8', select = c("IDADE_ORIGINAL","DATA_DIAGNOSTICO","DATA_OBITO"))
 
 dados_covid2 <- dados_covid
@@ -85,7 +85,7 @@ dados_covid_obitos <- subset(dados_covid_obitos, semana > max(dados_covid_obitos
 ##############################################################
 #DADOS DA VACINA                                             #
 ##############################################################
-dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-05-30/uf%3DPR/part-00000-c6f35be5-568b-4cdc-8a34-55616fec6ab1.c000.csv",
+dados_vacina <- fread("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/PNI/vacina/uf/2021-06-13/uf%3DPR/part-00000-9b457773-dd18-4df0-8455-fd8f99c8ddae.c000.csv",
                       encoding = 'UTF-8', select = c("paciente_idade","vacina_dataaplicacao","vacina_descricao_dose"))
 dados_vacina$ind <- 1
 dados_vacina$vacina_descricao_dose <- as.factor(dados_vacina$vacina_descricao_dose)
